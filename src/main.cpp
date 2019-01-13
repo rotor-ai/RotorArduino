@@ -6,6 +6,7 @@ void receiveEvent(int byteCount) {
     char c = Wire.read();
     Serial.print(c);
   }
+  Serial.print("\n\r");
 }
 
 void setup() {
