@@ -1,9 +1,21 @@
 #include <Arduino.h>
+#include <Wire.h>
+
+void receiveEvent(int byteCount) {
+  while (Wire.available()) {
+    char c = Wire.read();
+    Serial.print(c);
+  }
+}
 
 void setup() {
-  // put your setup code here, to run once:
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
+  Wire.begin(8);
+  Wire.onReceive(receiveEvent);
+  Serial.begin(9600);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  delay(500);
 }
