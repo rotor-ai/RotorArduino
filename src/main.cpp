@@ -1,12 +1,19 @@
 #include <Arduino.h>
 #include <Wire.h>
 
+void decodeCommand(String command) {
+  // TODO
+}
+
 void receiveEvent(int byteCount) {
+  String commandStr = "";
   while (Wire.available()) {
     char c = Wire.read();
-    Serial.print(c);
+    commandStr += c;
   }
-  Serial.print("\n\r");
+  // Serial.print((commandStr + "\n\r"));
+  // Serial.print("\n\r");
+  decodeCommand(commandStr);
 }
 
 void setup() {
