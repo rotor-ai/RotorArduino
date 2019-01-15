@@ -9,17 +9,29 @@ RotorCtl::RotorCtl() {
     _steerVal = 0;
 
     // Set trim values
-    _THROT_PWM_MAX = 255;
-    _THROT_PWM_MIN = 55;
-    _throtPwmNeut = 155;
-    _STEER_PWM_MAX = 255;
-    _STEER_PWM_MIN = 55;
-    _steerPwmNeut = 155;
+    _THROT_PWM_MAX = getPwmFromDutyCycle(.07);
+    _THROT_PWM_MIN = getPwmFromDutyCycle(.056);
+    _throtPwmNeut = getPwmFromDutyCycle(.06);
+    _STEER_PWM_MAX = getPwmFromDutyCycle(.11);
+    _STEER_PWM_MIN = getPwmFromDutyCycle(.068);
+    _steerPwmNeut = getPwmFromDutyCycle(.1);
 
-    // Set PWM pins
+    // Set IO pins
     _THROT_PIN = 10;
     _STEER_PIN = 11;
+    _RELAY_PIN = 12;
+    pinMode(_RELAY_PIN, OUTPUT);
+    digitalWrite(_RELAY_PIN, LOW);
+
     // DEBUG: Serial.begin(9600)
+}
+
+void RotorCtl::powerOnRotor() {
+    digitalWrite(_RELAY_PIN, HIGH);
+}
+
+void RotorCtl::powerOffRotor() {
+    digitalWrite(_RELAY_PIN, LOW);
 }
 
 void RotorCtl::stageNewCommand(String cmdStr) {
@@ -73,6 +85,11 @@ int RotorCtl::getPwmVal(int neut, int full, int val) {
     return pwm;
 }
 
+int RotorCtl::getPwmFromDutyCycle(double dutyCycle) {
+    int pwm = (int) dutyCycle * 255;
+    return pwm;
+}
+
 String RotorCtl::getThrotDir() {
     return _throtDir;
 }
@@ -87,4 +104,12 @@ String RotorCtl::getSteerDir() {
 
 int RotorCtl::getSteerVal() {
     return _steerVal;
+}
+
+void RotorCtl::incSteerTrim(bool up) {
+    up ? _steerPwmNeut++ : _steerPwmNeut--;
+}
+
+void RotorCtl::incThrotTrim(bool up) {
+    up ? _throtPwmNeut++ : _throtPwmNeut--;
 }

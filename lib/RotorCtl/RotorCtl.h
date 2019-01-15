@@ -17,13 +17,19 @@ class RotorCtl {
   int _STEER_PWM_MAX, _STEER_PWM_MIN, _steerPwmNeut;
   int _THROT_PIN;
   int _STEER_PIN;
+  int _RELAY_PIN;
   int getPwmVal(int neut, int full, int val);
+  int getPwmFromDutyCycle(double dutyCycle);
 
   public:
   RotorCtl();
+  void powerOnRotor();
+  void powerOffRotor();
   void stageNewCommand(String cmd);
   void writeToThrot();
   void writeToSteer();
+  void incSteerTrim(bool up);
+  void incThrotTrim(bool up);
   String getThrotDir();
   int getThrotVal();
   String getSteerDir();
