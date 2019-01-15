@@ -1,20 +1,12 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include <RotorCtl.h>
 
-void decodeCommand(String command) {
-  // TODO
-}
+// Function declarations
+void receiveEvent(int byteCount);
 
-void receiveEvent(int byteCount) {
-  String commandStr = "";
-  while (Wire.available()) {
-    char c = Wire.read();
-    commandStr += c;
-  }
-  // Serial.print((commandStr + "\n\r"));
-  // Serial.print("\n\r");
-  decodeCommand(commandStr);
-}
+// Globals
+RotorCtl rotorCtl;
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -26,4 +18,14 @@ void setup() {
 
 void loop() {
   delay(500);
+}
+
+void receiveEvent(int byteCount) {
+  String commandStr = "";
+  while (Wire.available()) {
+    char c = Wire.read();
+    commandStr += c;
+  }
+  // Serial.print((commandStr + "\n\r"));
+  rotorCtl.decodeCommand(commandStr);
 }
