@@ -9,8 +9,6 @@ void receiveEvent(int byteCount);
 RotorCtl rotorCtl;
 
 void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
   Wire.begin(8);
   Wire.onReceive(receiveEvent);
   Serial.begin(9600);
@@ -26,6 +24,8 @@ void receiveEvent(int byteCount) {
     char c = Wire.read();
     commandStr += c;
   }
-  // Serial.print((commandStr + "\n\r"));
-  rotorCtl.decodeCommand(commandStr);
+
+  rotorCtl.stageNewCommand(commandStr);
+  rotorCtl.writeToSteer();
+  rotorCtl.writeToThrot();
 }

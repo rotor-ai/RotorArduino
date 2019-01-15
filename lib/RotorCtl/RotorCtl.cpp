@@ -7,16 +7,70 @@ RotorCtl::RotorCtl() {
     _throtVal = 0;
     _steerDir = "N";
     _steerVal = 0;
+
+    // Set trim values
+    _THROT_PWM_MAX = 255;
+    _THROT_PWM_MIN = 55;
+    _throtPwmNeut = 155;
+    _STEER_PWM_MAX = 255;
+    _STEER_PWM_MIN = 55;
+    _steerPwmNeut = 155;
+
+    // Set PWM pins
+    _THROT_PIN = 10;
+    _STEER_PIN = 11;
+    // DEBUG: Serial.begin(9600)
 }
 
-void RotorCtl::decodeCommand(String cmdStr) {
-    _throtDir = cmdStr.substring(0, 0);
-    String throtValString = cmdStr.substring(1, 3);
-    _steerDir = cmdStr.substring(6, 6);
-    String steerValString = cmdStr.substring(7, 9);
+void RotorCtl::stageNewCommand(String cmdStr) {
+    _throtDir = cmdStr.substring(0, 1);
+    String throtValString = cmdStr.substring(1, 4);
+    _steerDir = cmdStr.substring(6, 7);
+    String steerValString = cmdStr.substring(7, 10);
 
     _throtVal = throtValString.toInt();
     _steerVal = steerValString.toInt();
+}
+
+void RotorCtl::writeToThrot() {
+    // Calculate PWM
+    int pwm;
+    if (_throtDir == "F") {
+        pwm = getPwmVal(_throtPwmNeut, _THROT_PWM_MAX, _throtVal);
+    } else if(_throtDir == "V") {
+        pwm = getPwmVal(_throtPwmNeut, _THROT_PWM_MIN, _throtVal);
+    } else {
+        pwm = _throtPwmNeut;
+    }
+
+    // Write to PWM
+    analogWrite(_THROT_PIN, pwm);
+}
+
+void RotorCtl::writeToSteer() {
+    // Calculate PWM
+    int pwm;
+    if (_steerDir == "L") {
+        pwm = getPwmVal(_steerPwmNeut, _STEER_PWM_MAX, _steerVal);
+    } else if(_steerDir == "R") {
+        pwm = getPwmVal(_steerPwmNeut, _STEER_PWM_MIN, _steerVal);
+    } else {
+        pwm = _steerPwmNeut;
+    }
+
+    // Write to PWM
+    analogWrite(_STEER_PIN, pwm);
+
+    // DEBUG: char cstr[16];
+    // itoa(_throtVal, cstr, 10);
+    // Serial.write(cstr);
+}
+
+int RotorCtl::getPwmVal(int neut, int full, int val) {
+    double pct = ((double) val / 100);
+    int pwmOffset = (int) (pct * (full - neut));
+    int pwm = pwmOffset + neut;
+    return pwm;
 }
 
 String RotorCtl::getThrotDir() {
