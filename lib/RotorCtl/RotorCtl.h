@@ -6,6 +6,7 @@
 #define RotorCtl_h
 
 #include <Arduino.h>
+#include <Servo.h>
 
 class RotorCtl {
   private:
@@ -20,6 +21,8 @@ class RotorCtl {
   int _RELAY_PIN;
   int getPwmVal(int neut, int full, int val);
   int getPwmFromDutyCycle(double dutyCycle);
+  Servo _steerServo;
+  Servo _esc;
 
   public:
   RotorCtl();
@@ -28,8 +31,6 @@ class RotorCtl {
   void stageNewCommand(String cmd);
   void writeToThrot();
   void writeToSteer();
-  void incSteerTrim(bool up);
-  void incThrotTrim(bool up);
   String getThrotDir();
   int getThrotVal();
   String getSteerDir();

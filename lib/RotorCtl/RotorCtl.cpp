@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "RotorCtl.h"
+#include <Servo.h>
 
 RotorCtl::RotorCtl() {
     // Initialize to neutral
@@ -9,12 +10,13 @@ RotorCtl::RotorCtl() {
     _steerVal = 0;
 
     // Set trim values
-    _THROT_PWM_MAX = getPwmFromDutyCycle(.07);
-    _THROT_PWM_MIN = getPwmFromDutyCycle(.056);
-    _throtPwmNeut = getPwmFromDutyCycle(.06);
-    _STEER_PWM_MAX = getPwmFromDutyCycle(.11);
-    _STEER_PWM_MIN = getPwmFromDutyCycle(.068);
-    _steerPwmNeut = getPwmFromDutyCycle(.1);
+    _THROT_PWM_MAX = 180;
+    _THROT_PWM_MIN = 0;
+    _throtPwmNeut = 90;
+
+    _STEER_PWM_MAX = 180;
+    _STEER_PWM_MIN = 0;
+    _steerPwmNeut = 90;
 
     // Set IO pins
     _THROT_PIN = 10;
@@ -23,7 +25,11 @@ RotorCtl::RotorCtl() {
     pinMode(_RELAY_PIN, OUTPUT);
     digitalWrite(_RELAY_PIN, LOW);
 
-    // DEBUG: Serial.begin(9600)
+    // Bind servo library
+    _steerServo.attach(_STEER_PIN);
+    _esc.attach(_THROT_PIN);
+
+    Serial.begin(9600);
 }
 
 void RotorCtl::powerOnRotor() {
@@ -35,13 +41,31 @@ void RotorCtl::powerOffRotor() {
 }
 
 void RotorCtl::stageNewCommand(String cmdStr) {
-    _throtDir = cmdStr.substring(0, 1);
-    String throtValString = cmdStr.substring(1, 4);
-    _steerDir = cmdStr.substring(6, 7);
-    String steerValString = cmdStr.substring(7, 10);
+    if (cmdStr.length() == 10) {
+        _throtDir = cmdStr.substring(0, 1);
+        String throtValString = cmdStr.substring(1, 4);
+        _steerDir = cmdStr.substring(6, 7);
+        String steerValString = cmdStr.substring(7, 10);
 
-    _throtVal = throtValString.toInt();
-    _steerVal = steerValString.toInt();
+        _throtVal = throtValString.toInt();
+        _steerVal = steerValString.toInt();
+    } else {
+        if (cmdStr.charAt(1) == 'F') {
+            _throtPwmNeut++;
+        } else if (cmdStr.charAt(1) == 'V') {
+            _throtPwmNeut--;
+        } else if (cmdStr.charAt(1) == 'L') {
+            _steerPwmNeut++;
+        } else {
+            _steerPwmNeut--;
+        }
+    }
+
+    char cstr[16];
+    itoa(_steerVal, cstr, 10);
+    Serial.write("loaded value: ");
+    Serial.write(cstr);
+    Serial.write("\n\r");
 }
 
 void RotorCtl::writeToThrot() {
@@ -56,7 +80,10 @@ void RotorCtl::writeToThrot() {
     }
 
     // Write to PWM
-    analogWrite(_THROT_PIN, pwm);
+    _esc.write(pwm);
+    // char cstr[16];
+    // itoa(pwm, cstr, 10);
+    // Serial.println(cstr);
 }
 
 void RotorCtl::writeToSteer() {
@@ -71,7 +98,13 @@ void RotorCtl::writeToSteer() {
     }
 
     // Write to PWM
-    analogWrite(_STEER_PIN, pwm);
+    _steerServo.write(pwm);
+
+    char cstr[16];
+    itoa(pwm, cstr, 10);
+    Serial.write("written value: ");
+    Serial.write(cstr);
+    Serial.write("\n\r");
 
     // DEBUG: char cstr[16];
     // itoa(_throtVal, cstr, 10);
@@ -86,7 +119,7 @@ int RotorCtl::getPwmVal(int neut, int full, int val) {
 }
 
 int RotorCtl::getPwmFromDutyCycle(double dutyCycle) {
-    int pwm = (int) dutyCycle * 255;
+    int pwm = (int) (dutyCycle * 255);
     return pwm;
 }
 
@@ -104,12 +137,4 @@ String RotorCtl::getSteerDir() {
 
 int RotorCtl::getSteerVal() {
     return _steerVal;
-}
-
-void RotorCtl::incSteerTrim(bool up) {
-    up ? _steerPwmNeut++ : _steerPwmNeut--;
-}
-
-void RotorCtl::incThrotTrim(bool up) {
-    up ? _throtPwmNeut++ : _throtPwmNeut--;
 }
