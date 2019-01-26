@@ -7,10 +7,10 @@
 void receiveEvent(int byteCount);
 
 // Globals
-RotorCtl rotorCtl;
 String startupCmd = "N000, N000";
 Servo steerServo;
 Servo esc;
+RotorCtl rotorCtl(steerServo, esc);
 
 void setup() {
   Wire.begin(8);
@@ -26,12 +26,14 @@ void setup() {
   rotorCtl.powerOnRotor();
   delay(1000);
 
+  steerServo.attach(11);
+  esc.attach(10);
+
   Serial.println("Started up...");
 }
 
 void loop() {
-  Serial.println("looping...");
-  delay(1000);
+  delay(500);
 }
 
 void receiveEvent(int byteCount) {
@@ -41,9 +43,8 @@ void receiveEvent(int byteCount) {
     commandStr += c;
   }
 
-  Serial.println(commandStr);
-
   rotorCtl.stageNewCommand(commandStr);
   rotorCtl.writeToSteer();
   rotorCtl.writeToThrot();
+
 }

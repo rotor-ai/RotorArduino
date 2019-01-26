@@ -25,7 +25,7 @@ class RotorCtl {
   Servo _esc;
 
   public:
-  RotorCtl();
+  RotorCtl(Servo steerServo, Servo esc);
   void powerOnRotor();
   void powerOffRotor();
   void stageNewCommand(String cmd);
@@ -35,6 +35,8 @@ class RotorCtl {
   int getThrotVal();
   String getSteerDir();
   int getSteerVal();
+  void turnRight();
+  void turnLeft();
 };
 
 #endif

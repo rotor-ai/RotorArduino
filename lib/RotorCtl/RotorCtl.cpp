@@ -2,7 +2,9 @@
 #include "RotorCtl.h"
 #include <Servo.h>
 
-RotorCtl::RotorCtl() {
+using namespace RotorCtl;
+
+RotorCtl(Servo steerServo, Servo esc) {
     // Initialize to neutral
     _throtDir = "N";
     _throtVal = 0;
@@ -13,7 +15,6 @@ RotorCtl::RotorCtl() {
     _THROT_PWM_MAX = 180;
     _THROT_PWM_MIN = 0;
     _throtPwmNeut = 90;
-
     _STEER_PWM_MAX = 180;
     _STEER_PWM_MIN = 0;
     _steerPwmNeut = 90;
@@ -26,21 +27,21 @@ RotorCtl::RotorCtl() {
     digitalWrite(_RELAY_PIN, LOW);
 
     // Bind servo library
-    _steerServo.attach(_STEER_PIN);
-    _esc.attach(_THROT_PIN);
+    _steerServo = steerServo;
+    _esc = esc;
 
     Serial.begin(9600);
 }
 
-void RotorCtl::powerOnRotor() {
+void powerOnRotor() {
     digitalWrite(_RELAY_PIN, HIGH);
 }
 
-void RotorCtl::powerOffRotor() {
+void powerOffRotor() {
     digitalWrite(_RELAY_PIN, LOW);
 }
 
-void RotorCtl::stageNewCommand(String cmdStr) {
+void stageNewCommand(String cmdStr) {
     if (cmdStr.length() == 10) {
         _throtDir = cmdStr.substring(0, 1);
         String throtValString = cmdStr.substring(1, 4);
@@ -61,14 +62,14 @@ void RotorCtl::stageNewCommand(String cmdStr) {
         }
     }
 
-    char cstr[16];
-    itoa(_steerVal, cstr, 10);
-    Serial.write("loaded value: ");
-    Serial.write(cstr);
-    Serial.write("\n\r");
+    // char cstr[16];
+    // itoa(_steerVal, cstr, 10);
+    // Serial.write("loaded value: ");
+    // Serial.write(cstr);
+    // Serial.write("\n\r");
 }
 
-void RotorCtl::writeToThrot() {
+void writeToThrot() {
     // Calculate PWM
     int pwm;
     if (_throtDir == "F") {
@@ -81,12 +82,13 @@ void RotorCtl::writeToThrot() {
 
     // Write to PWM
     _esc.write(pwm);
+
     // char cstr[16];
     // itoa(pwm, cstr, 10);
     // Serial.println(cstr);
 }
 
-void RotorCtl::writeToSteer() {
+void writeToSteer() {
     // Calculate PWM
     int pwm;
     if (_steerDir == "L") {
@@ -100,41 +102,35 @@ void RotorCtl::writeToSteer() {
     // Write to PWM
     _steerServo.write(pwm);
 
-    char cstr[16];
-    itoa(pwm, cstr, 10);
-    Serial.write("written value: ");
-    Serial.write(cstr);
-    Serial.write("\n\r");
-
-    // DEBUG: char cstr[16];
+    // char cstr[16];
     // itoa(_throtVal, cstr, 10);
     // Serial.write(cstr);
 }
 
-int RotorCtl::getPwmVal(int neut, int full, int val) {
+int getPwmVal(int neut, int full, int val) {
     double pct = ((double) val / 100);
     int pwmOffset = (int) (pct * (full - neut));
     int pwm = pwmOffset + neut;
     return pwm;
 }
 
-int RotorCtl::getPwmFromDutyCycle(double dutyCycle) {
+int getPwmFromDutyCycle(double dutyCycle) {
     int pwm = (int) (dutyCycle * 255);
     return pwm;
 }
 
-String RotorCtl::getThrotDir() {
+String getThrotDir() {
     return _throtDir;
 }
 
-int RotorCtl::getThrotVal() {
+int getThrotVal() {
     return _throtVal;
 }
 
-String RotorCtl::getSteerDir() {
+String getSteerDir() {
     return _steerDir;
 }
 
-int RotorCtl::getSteerVal() {
+int getSteerVal() {
     return _steerVal;
 }
