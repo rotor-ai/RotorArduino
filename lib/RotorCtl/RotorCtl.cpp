@@ -45,8 +45,8 @@ void stageNewCommand(String cmdStr) {
     if (cmdStr.length() == 10) {
         _throtDir = cmdStr.substring(0, 1);
         String throtValString = cmdStr.substring(1, 4);
-        _steerDir = cmdStr.substring(6, 7);
-        String steerValString = cmdStr.substring(7, 10);
+        _steerDir = cmdStr.substring(5, 6);
+        String steerValString = cmdStr.substring(6, 9);
 
         _throtVal = throtValString.toInt();
         _steerVal = steerValString.toInt();
