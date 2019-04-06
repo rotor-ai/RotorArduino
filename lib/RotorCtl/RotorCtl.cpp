@@ -2,9 +2,7 @@
 #include "RotorCtl.h"
 #include <Servo.h>
 
-using namespace RotorCtl;
-
-RotorCtl(Servo steerServo, Servo esc) {
+RotorCtl::RotorCtl(Servo steerServo, Servo esc) {
     // Initialize to neutral
     _throtDir = "N";
     _throtVal = 0;
@@ -33,15 +31,15 @@ RotorCtl(Servo steerServo, Servo esc) {
     Serial.begin(9600);
 }
 
-void powerOnRotor() {
+void RotorCtl::powerOnRotor() {
     digitalWrite(_RELAY_PIN, HIGH);
 }
 
-void powerOffRotor() {
+void RotorCtl::powerOffRotor() {
     digitalWrite(_RELAY_PIN, LOW);
 }
 
-void stageNewCommand(String cmdStr) {
+void RotorCtl::stageNewCommand(String cmdStr) {
     if (cmdStr.length() == 10) {
         _throtDir = cmdStr.substring(0, 1);
         String throtValString = cmdStr.substring(1, 4);
@@ -69,7 +67,7 @@ void stageNewCommand(String cmdStr) {
     // Serial.write("\n\r");
 }
 
-void writeToThrot() {
+void RotorCtl::writeToThrot() {
     // Calculate PWM
     int pwm;
     if (_throtDir == "F") {
@@ -88,7 +86,7 @@ void writeToThrot() {
     // Serial.println(cstr);
 }
 
-void writeToSteer() {
+void RotorCtl::writeToSteer() {
     // Calculate PWM
     int pwm;
     if (_steerDir == "L") {
@@ -107,30 +105,30 @@ void writeToSteer() {
     // Serial.write(cstr);
 }
 
-int getPwmVal(int neut, int full, int val) {
+int RotorCtl::getPwmVal(int neut, int full, int val) {
     double pct = ((double) val / 100);
     int pwmOffset = (int) (pct * (full - neut));
     int pwm = pwmOffset + neut;
     return pwm;
 }
 
-int getPwmFromDutyCycle(double dutyCycle) {
+int RotorCtl::getPwmFromDutyCycle(double dutyCycle) {
     int pwm = (int) (dutyCycle * 255);
     return pwm;
 }
 
-String getThrotDir() {
+String RotorCtl::getThrotDir() {
     return _throtDir;
 }
 
-int getThrotVal() {
+int RotorCtl::getThrotVal() {
     return _throtVal;
 }
 
-String getSteerDir() {
+String RotorCtl::getSteerDir() {
     return _steerDir;
 }
 
-int getSteerVal() {
+int RotorCtl::getSteerVal() {
     return _steerVal;
 }
