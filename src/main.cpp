@@ -43,6 +43,7 @@ void receiveEvent(int byteCount) {
     commandStr += c;
   }
 
+  // Serial.println(commandStr);
   rotorCtl.stageNewCommand(commandStr);
   rotorCtl.writeToSteer();
   rotorCtl.writeToThrot();

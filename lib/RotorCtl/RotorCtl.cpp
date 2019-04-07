@@ -28,7 +28,7 @@ RotorCtl::RotorCtl(Servo steerServo, Servo esc) {
     _steerServo = steerServo;
     _esc = esc;
 
-    Serial.begin(9600);
+    // Serial.begin(9600);
 }
 
 void RotorCtl::powerOnRotor() {
@@ -40,7 +40,7 @@ void RotorCtl::powerOffRotor() {
 }
 
 void RotorCtl::stageNewCommand(String cmdStr) {
-    if (cmdStr.length() == 10) {
+    if (cmdStr.length() == 9) {
         _throtDir = cmdStr.substring(0, 1);
         String throtValString = cmdStr.substring(1, 4);
         _steerDir = cmdStr.substring(5, 6);
@@ -81,9 +81,9 @@ void RotorCtl::writeToThrot() {
     // Write to PWM
     _esc.write(pwm);
 
-    // char cstr[16];
-    // itoa(pwm, cstr, 10);
-    // Serial.println(cstr);
+    char cstr[16];
+    itoa(pwm, cstr, 10);
+    Serial.println(cstr);
 }
 
 void RotorCtl::writeToSteer() {
