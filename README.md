@@ -1,4 +1,4 @@
-# RotorArduino
+# RotorArduino 0.1.0
 
 The RotorArduino library provides the underlying control of motors and sensors on the Rotor System. 
 
