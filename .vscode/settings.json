@@ -1,6 +1,0 @@
-{
-    "terminal.integrated.env.osx": {
-        "PATH": "/Users/Robbie/.platformio/penv/bin:/Users/Robbie/.platformio/penv:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/kristen/Library/Android/sdk/platform-tools:/opt/X11/bin:/users/Robbie/Documents/development/flutter/bin:/Users/Robbie/miniconda3/bin",
-        "PLATFORMIO_CALLER": "vscode"
-    }
-}
