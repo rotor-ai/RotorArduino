@@ -55,7 +55,7 @@ void RotorCtl::stageNewCommand(String cmdStr) {
             _throtPwmNeut--;
         } else if (cmdStr.charAt(1) == 'L') {
             _steerPwmNeut++;
-        } else {
+        } else if (cmdStr.charAt(1) == 'R') {
             _steerPwmNeut--;
         }
     }
@@ -83,6 +83,7 @@ void RotorCtl::writeToThrot() {
 
     char cstr[16];
     itoa(pwm, cstr, 10);
+    Serial.write("Throttle pwm: ");
     Serial.println(cstr);
 }
 
@@ -100,9 +101,10 @@ void RotorCtl::writeToSteer() {
     // Write to PWM
     _steerServo.write(pwm);
 
-    // char cstr[16];
-    // itoa(_throtVal, cstr, 10);
-    // Serial.write(cstr);
+    char cstr[16];
+    itoa(pwm, cstr, 10);
+    Serial.write("Steering PWM: ");
+    Serial.println(cstr);
 }
 
 int RotorCtl::getPwmVal(int neut, int full, int val) {
