@@ -51,7 +51,7 @@ void RotorCtl::stageNewCommand(String cmdStr) {
     } else {
         if (cmdStr.charAt(1) == 'F') {
             _throtPwmNeut++;
-        } else if (cmdStr.charAt(1) == 'V') {
+        } else if (cmdStr.charAt(1) == 'B') {
             _throtPwmNeut--;
         } else if (cmdStr.charAt(1) == 'L') {
             _steerPwmNeut++;
@@ -72,7 +72,7 @@ void RotorCtl::writeToThrot() {
     int pwm;
     if (_throtDir == "F") {
         pwm = getPwmVal(_throtPwmNeut, _THROT_PWM_MAX, _throtVal);
-    } else if(_throtDir == "V") {
+    } else if(_throtDir == "B") {
         pwm = getPwmVal(_throtPwmNeut, _THROT_PWM_MIN, _throtVal);
     } else {
         pwm = _throtPwmNeut;
