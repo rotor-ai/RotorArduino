@@ -81,10 +81,10 @@ void RotorCtl::writeToThrot() {
     // Write to PWM
     _esc.write(pwm);
 
-    char cstr[16];
-    itoa(pwm, cstr, 10);
-    Serial.write("Throttle pwm: ");
-    Serial.println(cstr);
+    // char cstr[16];
+    // itoa(pwm, cstr, 10);
+    // Serial.write("Throttle pwm: ");
+    // Serial.println(cstr);
 }
 
 void RotorCtl::writeToSteer() {
@@ -101,10 +101,10 @@ void RotorCtl::writeToSteer() {
     // Write to PWM
     _steerServo.write(pwm);
 
-    char cstr[16];
-    itoa(pwm, cstr, 10);
-    Serial.write("Steering PWM: ");
-    Serial.println(cstr);
+    // char cstr[16];
+    // itoa(pwm, cstr, 10);
+    // Serial.write("Steering PWM: ");
+    // Serial.println(cstr);
 }
 
 int RotorCtl::getPwmVal(int neut, int full, int val) {
