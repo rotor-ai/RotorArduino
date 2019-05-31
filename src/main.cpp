@@ -1,21 +1,17 @@
 #include <Arduino.h>
-#include <Wire.h>
 #include <RotorCtl.h>
 #include <Servo.h>
 
-// Function declarations
-void receiveEvent(int byteCount);
-
 // Globals
-String startupCmd = "N000, N000";
+String startupCmd = "N000 N000";
 String bufferedString = "";
 Servo steerServo;
 Servo esc;
 RotorCtl rotorCtl(steerServo, esc);
+int _THROT_PIN = 10;
+int _STEER_PIN = 11;
 
 void setup() {
-  Wire.begin(8);
-  Wire.onReceive(receiveEvent);
   Serial.begin(9600);
   Serial.setTimeout(50);
 
@@ -23,7 +19,9 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
 
-  // Serial.println("Starting up...");
+  // Attach servos
+  steerServo.attach(_STEER_PIN);
+  esc.attach(_THROT_PIN);
 
   // startup Sequence
   rotorCtl.stageNewCommand(startupCmd);
@@ -32,10 +30,6 @@ void setup() {
   rotorCtl.powerOnRotor();
   delay(1000);
 
-  steerServo.attach(11);
-  esc.attach(10);
-
-  // Serial.println("Started up...");
 }
 
 void loop() {
@@ -46,27 +40,21 @@ void loop() {
     // Loop over message and parse
     for (unsigned int j = 0; j < message.length(); j++) {
       char c = message.charAt(j);
-      bufferedString += c;
+      
       if (c == '\n') {
+
+        // Stage received command to vehicle
+        rotorCtl.stageNewCommand(bufferedString);
+        rotorCtl.writeToSteer();
+        rotorCtl.writeToThrot();
+
+        // Respond with current command
+        bufferedString += c;
         Serial.print(bufferedString);
         bufferedString = "";
       }
+
+      bufferedString += c;
     }
   }
-}
-
-void receiveEvent(int byteCount) {
-  String commandStr = "";
-  while (Wire.available()) {
-    char c = Wire.read();
-    commandStr += c;
-  }
-
-  Serial.println("Received msg");
-
-  // Serial.println(commandStr);
-  // rotorCtl.stageNewCommand(commandStr);
-  // rotorCtl.writeToSteer();
-  // rotorCtl.writeToThrot();
-
 }

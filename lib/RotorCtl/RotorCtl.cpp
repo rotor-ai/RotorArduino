@@ -18,8 +18,6 @@ RotorCtl::RotorCtl(Servo steerServo, Servo esc) {
     _steerPwmNeut = 90;
 
     // Set IO pins
-    _THROT_PIN = 10;
-    _STEER_PIN = 11;
     _RELAY_PIN = 12;
     pinMode(_RELAY_PIN, OUTPUT);
     digitalWrite(_RELAY_PIN, LOW);
