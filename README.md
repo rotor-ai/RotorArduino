@@ -2,8 +2,6 @@
 
 The RotorArduino library provides the underlying control of motors and sensors on the Rotor System. 
 
-## Getting Started
-
 ### Prerequisites
 
 The RotorArduino library has been tested on the Arduino Uno board.
@@ -12,10 +10,9 @@ Dependencies:
 - Arduino Servo.h library
 
 Additional Hardware:
-- Raspberry Pi running the `RotorVehicle` library - https://github.com/rotor-ai/RotorVehicle
-- Android or iOS device running the Rotor `mobileclient` library - https://github.com/rotor-ai/mobileclient
+- Android Phone running the `RotorVehicle` app - https://github.com/rotor-ai/RotorVehicle
+- Android or iOS device running the `RotorController` app - https://github.com/rotor-ai/mobileclient
 - RC car with PWM speed control and servo for steering - a good starting point is the Exceed Short Course Desert Truck - [Amazon](https://www.amazon.com/Exceed-Racing-Desert-Course-2-4ghz/dp/9269802108/ref=sr_1_fkmrnull_1?keywords=Exceed+Racing+Desert+Short+Course+Truck&qid=1554669149&s=toys-and-games&sr=1-1-fkmrnull)
-- (Optional) A Raspberry Pi LCD screen can be used for logging and debugging - [Amazon](https://www.amazon.com/gp/product/B0153R2A9I/ref=ppx_od_dt_b_asin_title_s01?ie=UTF8&psc=1)
 
 ### Installing
 
