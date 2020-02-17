@@ -7,7 +7,11 @@ The RotorArduino library provides the underlying control of motors and sensors o
 The RotorArduino library has been tested on the Arduino Uno board.
 
 Dependencies:
-- Arduino Servo.h library
+- Servo.h - licensed under GNU LGPL v2.1 - used with no modifications
+    Copyright (c) 2009 Michael Margolis.  All right reserved.
+
+- Arduino core library - licensed under GNU LGPL v2.1 - used with no modifications
+    Copyright (c) 2005-2013 Arduino Team.  All right reserved.
 
 Additional Hardware:
 - Android Phone running the `RotorVehicle` app - https://github.com/rotor-ai/RotorVehicle
