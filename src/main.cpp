@@ -50,11 +50,13 @@ void loop() {
 
         // Respond with current command
         bufferedString += c;
-        Serial.print(bufferedString);
+        Serial.println("'" + bufferedString + "'");
         bufferedString = "";
       }
+      else {//very critical else
+        bufferedString += c;
+      }
 
-      bufferedString += c;
     }
   }
 }
